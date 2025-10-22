@@ -736,7 +736,11 @@ this.localGreetingShown = true;
   this.addUserMessage(message);
 
   // Neteja navegació i mostra "escrivint..."
-  this.navigation.clearNavigation(this.messagesContainer);
+  // Línia comentada intencionadament per canviar el comportament del xat.
+  // Abans: El menú de botons s'esborrava en enviar un missatge de text.
+  // Ara: El menú es manté visible per millorar l'experiència d'usuari i l'accés ràpid a les opcions.
+  // NO DESCOMENTAR si no es vol revertir aquest canvi.
+  // this.navigation.clearNavigation(this.messagesContainer);
   if (this.config.features.enableTypingIndicator) this.showTypingIndicator();
   this.setInputEnabled(false);
 
