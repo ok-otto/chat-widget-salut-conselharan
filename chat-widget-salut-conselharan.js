@@ -498,6 +498,7 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
             this.bindEvents();
             this.restoreSession();
             this.preventZoomOnMobile();
+            this.open();
         }
 
         injectStyles() {
