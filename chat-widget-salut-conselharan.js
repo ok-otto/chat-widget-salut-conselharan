@@ -2184,8 +2184,8 @@ this.localGreetingShown = true;
                 }
                 
                 .n8n-chat-widget .chat-toggle svg {
-                    width: 54px;
-                    height: 54px;
+                    width: 44px;
+                    height: 44px;
                     fill: currentColor;
                 }
                 
@@ -2274,8 +2274,8 @@ this.localGreetingShown = true;
                     .n8n-chat-widget .chat-toggle {
                         bottom: max(15px, env(safe-area-inset-bottom));
                         right: 15px;
-                        width: 50px;
-                        height: 50px;
+                        width: 60px;
+                        height: 60px;
                     }
                     
                     .n8n-chat-widget .chat-toggle.position-left {
