@@ -2151,8 +2151,8 @@ this.localGreetingShown = true;
                 
                 .n8n-chat-widget .chat-toggle {
                     position: fixed;
-                    bottom: 20px;
-                    right: 20px;
+                    bottom: 40px;
+                    right: 40px;
                     width: 80px;
                     height: 80px;
                     border-radius: 100px;
@@ -2170,7 +2170,7 @@ this.localGreetingShown = true;
                 
                 .n8n-chat-widget .chat-toggle.position-left {
                     right: auto;
-                    left: 20px;
+                    left: 40px;
                 }
                 
                 .n8n-chat-widget .chat-toggle:hover {
@@ -2184,8 +2184,8 @@ this.localGreetingShown = true;
                 }
                 
                 .n8n-chat-widget .chat-toggle svg {
-                    width: 44px;
-                    height: 44px;
+                    width: 34px;
+                    height: 34px;
                     fill: currentColor;
                 }
                 
@@ -2272,15 +2272,15 @@ this.localGreetingShown = true;
                     }
                     
                     .n8n-chat-widget .chat-toggle {
-                        bottom: max(15px, env(safe-area-inset-bottom));
-                        right: 15px;
+                        bottom: max(25px, env(safe-area-inset-bottom));
+                        right: 25px;
                         width: 60px;
                         height: 60px;
                     }
                     
                     .n8n-chat-widget .chat-toggle.position-left {
                         right: auto;
-                        left: 15px;
+                        left: 25px;
                     }
                     
                     /* Millores tàctils */
