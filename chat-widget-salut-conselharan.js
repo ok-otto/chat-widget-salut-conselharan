@@ -2155,7 +2155,7 @@ this.localGreetingShown = true;
                     right: 20px;
                     width: 80px;
                     height: 80px;
-                    border-radius: 30px;
+                    border-radius: 100px;
                     background: linear-gradient(135deg, var(--chat--color-primary) 0%, var(--chat--color-secondary) 100%);
                     color: white;
                     border: none;
@@ -2184,8 +2184,8 @@ this.localGreetingShown = true;
                 }
                 
                 .n8n-chat-widget .chat-toggle svg {
-                    width: 44px;
-                    height: 44px;
+                    width: 54px;
+                    height: 54px;
                     fill: currentColor;
                 }
                 
