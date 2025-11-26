@@ -1,30 +1,29 @@
-// Chat Widget Script - Versió 6.6 - ARAN RESPON
-// Amb sistema híbrid d'idiomes, millores UX i optimització de flux
+// Chat Widget Script - Versió 7.1 - ARAN RESPON
+// Canvis: Botó +80px/+marge, Text benvinguda centrat/més visible + emoji
 
 (function() {
     'use strict';
 
-    // Prevenir múltiples inicialitzacions
+    // Prevenir múltiples inicialitzacion
     if (window.AranChatWidgetInitialized) return;
     window.AranChatWidgetInitialized = true;
 
     // ==================== CONFIGURACIÓ I CONSTANTS ====================
 
-// Map d’idiomes (fora de DEFAULT_CONFIG)
-const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
+    const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
     
     const DEFAULT_CONFIG = {
 
         webhook: {
-            url: '',
-            route: '',
+            url: 'https://ok-otto.app.n8n.cloud/webhook/9f2c9867-1643-421f-8730-a69211648a91/chat',
+            route: 'general',
             timeout: 30000,
             maxRetries: 3
         },
         branding: {
             logo: '',
-            name: '',
-            welcomeText: '',
+            name: 'Assistent Virtual d’Aran Salut',
+            welcomeText: '', 
             responseTimeText: '',
             poweredBy: {
                 text: 'Desenvolupat per ok-otto',
@@ -32,8 +31,8 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
             }
         },
         style: {
-            primaryColor: '#854fff',
-            secondaryColor: '#6b3fd4',
+            primaryColor: '#2c7be5',   
+            secondaryColor: '#1a4f9c', 
             position: 'right',
             backgroundColor: '#ffffff',
             fontColor: '#333333'
@@ -79,16 +78,12 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
         }
 
         static formatText(text) {
-            // Primer sanititzem el text
             const escapedText = this.sanitizeHTML(text);
             
-            // Convertim markdown a HTML de forma segura
             let formattedText = escapedText
-                // Headers
                 .replace(/^### (.*$)/gm, '<h3>$1</h3>')
                 .replace(/^## (.*$)/gm, '<h2>$1</h2>')
                 .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-                // Botons d'enllaç
                 .replace(/\[BOTÓ:([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
                     const safeUrl = this.isValidUrl(url) ? url : '#';
                     return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="link-button">${this.sanitizeHTML(text)}</a>`;
@@ -101,19 +96,15 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
                     const safeUrl = this.isValidUrl(url) ? url : '#';
                     return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="link-button">${this.sanitizeHTML(text)}</a>`;
                 })
-                // Enllaços normals
                 .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
                     const safeUrl = this.isValidUrl(url) ? url : '#';
                     return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${this.sanitizeHTML(text)}</a>`;
                 })
-                // Negreta
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/__(.*?)__/g, '<strong>$1</strong>')
-                // Cursiva
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/_(.*?)_/g, '<em>$1</em>');
 
-            // Gestió de paràgrafs
             const blocks = formattedText.split(/\n{2,}/);
             const processedBlocks = blocks.map(block => {
                 if (block.match(/^<h[1-6]>/)) return block;
@@ -155,7 +146,6 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
                     
                 } catch (error) {
                     if (i === maxRetries - 1) throw error;
-                    // Backoff exponencial
                     await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
                 }
             }
@@ -173,7 +163,6 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
 
         saveSession(sessionId, language) {
             if (!this.enabled) return;
-            
             try {
                 const data = {
                     sessionId,
@@ -188,7 +177,6 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
 
         getSession() {
             if (!this.enabled) return null;
-            
             try {
                 const data = localStorage.getItem(`${this.storageKey}-session`);
                 return data ? JSON.parse(data) : null;
@@ -199,7 +187,6 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
 
         saveMessage(message) {
             if (!this.enabled) return;
-            
             try {
                 const history = this.getHistory();
                 history.push({
@@ -219,7 +206,6 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
 
         getHistory() {
             if (!this.enabled) return [];
-            
             try {
                 const data = localStorage.getItem(`${this.storageKey}-history`);
                 return data ? JSON.parse(data) : [];
@@ -230,7 +216,6 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
 
         clearHistory() {
             if (!this.enabled) return;
-            
             try {
                 localStorage.removeItem(`${this.storageKey}-history`);
                 localStorage.removeItem(`${this.storageKey}-session`);
@@ -277,7 +262,6 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
     }
 
     // ==================== SISTEMA DE NAVEGACIÓ ====================
-    
     class NavigationSystem {
         constructor(languageTexts) {
             this.languageTexts = languageTexts;
@@ -465,7 +449,7 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
             this.selectedLanguage = '';
             this.isOpen = false;
             this.messageQueue = [];
-            this.hasUserInteracted = false; // Flag per saber si és la primera interacció real
+            this.hasUserInteracted = false;
             
             // Inicialitzar components
             this.storage = new StorageManager(this.config);
@@ -498,41 +482,52 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
             this.bindEvents();
             this.restoreSession();
             this.preventZoomOnMobile();
-            this.open();
+            
+            // Auto-open només si és PC (> 768px)
+            this.autoOpenIfDesktop();
+        }
+
+        autoOpenIfDesktop() {
+            // Comprovem l'ample de la pantalla
+            // 768px és el punt de tall estàndard:
+            // - Més gran de 768px = PC / Tablet horitzontal -> S'OBRE
+            // - Menor o igual = Mòbil -> ES QUEDA TANCAT
+            
+            if (window.innerWidth > 768) {
+                setTimeout(() => {
+                    // Si encara no està obert, l'obrim automàticament
+                    if (!this.isOpen) {
+                         this.open();
+                    }
+                }, 1000); // Espera 1 segon abans d'obrir-se per no ser brusc
+            }
         }
 
         injectStyles() {
-            // Carregar font Geist
             const fontLink = document.createElement('link');
             fontLink.rel = 'stylesheet';
             fontLink.href = 'https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/style.css';
             document.head.appendChild(fontLink);
 
-            // Injectar estils
             const styleSheet = document.createElement('style');
             styleSheet.textContent = this.getStyles();
             document.head.appendChild(styleSheet);
         }
 
         createWidget() {
-            // Contenidor principal
             this.container = document.createElement('div');
             this.container.className = 'n8n-chat-widget';
             
-            // Aplicar variables CSS personalitzades
             this.container.style.setProperty('--n8n-chat-primary-color', this.config.style.primaryColor);
             this.container.style.setProperty('--n8n-chat-secondary-color', this.config.style.secondaryColor);
             this.container.style.setProperty('--n8n-chat-background-color', this.config.style.backgroundColor);
             this.container.style.setProperty('--n8n-chat-font-color', this.config.style.fontColor);
 
-            // Contenidor del xat
             this.chatContainer = document.createElement('div');
             this.chatContainer.className = `chat-container${this.config.style.position === 'left' ? ' position-left' : ''}`;
             
-            // HTML inicial
             this.chatContainer.innerHTML = this.getInitialHTML();
             
-            // Botó toggle
             const toggleButton = document.createElement('button');
             toggleButton.className = `chat-toggle${this.config.style.position === 'left' ? ' position-left' : ''}`;
             toggleButton.innerHTML = `
@@ -545,14 +540,12 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
             this.container.appendChild(toggleButton);
             document.body.appendChild(this.container);
 
-            // Assignar referències a elements
             this.toggleButton = toggleButton;
             this.chatInterface = this.chatContainer.querySelector('.chat-interface');
             this.messagesContainer = this.chatContainer.querySelector('.chat-messages');
             this.textarea = this.chatContainer.querySelector('textarea');
             this.sendButton = this.chatContainer.querySelector('button[type="submit"]');
             
-            // Inicialitzar estat de connexió si està habilitat
             if (this.config.features.enableConnectionStatus) {
                 const brandHeader = this.chatContainer.querySelector('.chat-interface .brand-header');
                 this.connectionStatus = new ConnectionStatus(brandHeader);
@@ -560,24 +553,19 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
         }
 
         bindEvents() {
-            // Toggle button
             this.toggleButton.addEventListener('click', () => this.toggle());
             
-            // Close buttons
             this.chatContainer.querySelectorAll('.close-button').forEach(button => {
                 button.addEventListener('click', () => this.close());
             });
             
-            // Language buttons
             this.chatContainer.querySelectorAll('.language-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => this.selectLanguage(e.target.getAttribute('data-lang')));
             });
             
-            // Send button amb debounce
             const debouncedSend = Utils.debounce(() => this.sendCurrentMessage(), 300);
             this.sendButton.addEventListener('click', debouncedSend);
             
-            // Textarea events
             this.textarea.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -585,18 +573,14 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
                 }
             });
             
-            // Auto-resize textarea
             this.textarea.addEventListener('input', () => this.autoResizeTextarea());
             
-            // Keyboard accessibility
             this.chatContainer.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') this.close();
             });
             
-            // Handle mobile keyboard
             if (window.innerWidth <= 480) {
                 this.textarea.addEventListener('focus', () => {
-                    // Ensure input area stays visible when keyboard appears
                     setTimeout(() => {
                         const chatInput = this.chatContainer.querySelector('.chat-input');
                         if (chatInput) {
@@ -606,7 +590,6 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
                 });
 
                 this.textarea.addEventListener('blur', () => {
-                    // Reset viewport when keyboard disappears
                     setTimeout(() => {
                         window.scrollTo(0, 0);
                     }, 100);
@@ -623,7 +606,6 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
             this.isOpen = true;
             this.toggleButton.setAttribute('aria-expanded', 'true');
             
-            // Focus trap
             setTimeout(() => {
                 const firstFocusable = this.chatContainer.querySelector('button, textarea, a[href]');
                 if (firstFocusable) firstFocusable.focus();
@@ -640,26 +622,21 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
             this.selectedLanguage = language;
             this.navigation.setLanguage(language);
             
-            // Actualitzar visual dels botons
             this.chatContainer.querySelectorAll('.language-btn').forEach(btn => {
                 btn.classList.toggle('selected', btn.getAttribute('data-lang') === language);
             });
             
-            // Actualitzar textos
             const texts = this.getLanguageTexts()[language];
             this.textarea.placeholder = texts.placeholder;
             this.sendButton.textContent = texts.sendBtn;
             
-            // Actualitzar footer
             const footerLink = this.chatContainer.querySelector('.chat-footer a');
             if (footerLink) {
                 footerLink.textContent = texts.poweredBy;
             }
             
-            // Guardar selecció
             this.storage.saveSession(this.sessionId, language);
             
-            // Iniciar conversa
             await this.startNewConversation();
         }
 
@@ -670,11 +647,9 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
                 return;
             }
 
-            // Generar nou ID de sessió
             this.sessionId = Utils.generateUUID();
             this.storage.saveSession(this.sessionId, this.selectedLanguage);
             
-            // Canviar a interfície de xat
             this.chatContainer.querySelector('.brand-header').style.display = 'none';
             this.chatContainer.querySelector('.new-conversation').style.display = 'none';
             this.chatContainer.querySelector('.chat-interface').classList.add('active');
@@ -682,18 +657,14 @@ const IDIOMA_TAGS = { ca: 'català', es: 'español', oc: 'aranès' };
             try {
                 const texts = this.getLanguageTexts()[this.selectedLanguage];
 
-                // Mostrar salutació
                 this.addBotMessage(texts.greeting, true);
-                // Marca que hem saludat des del client
-this.localGreetingShown = true;
+                this.localGreetingShown = true;
 
-                // Mostrar categories després d'un petit delay
                 setTimeout(() => {
                     this.navigation.createCategoryButtons(
                         this.messagesContainer,
                         this.handleNavigation.bind(this)
                     );
-                    // Scroll al fons per veure les categories
                     this.scrollToBottom();
                 }, 500);
 
@@ -708,20 +679,17 @@ this.localGreetingShown = true;
             
             if (!message) return;
             
-            // Validar longitud
             if (message.length > this.config.features.maxMessageLength) {
                 this.showError(`El missatge és massa llarg (màxim ${this.config.features.maxMessageLength} caràcters)`);
                 return;
             }
             
-            // Comprovar connexió
             if (this.connectionStatus && !this.connectionStatus.isOnline()) {
                 this.showError('No hi ha connexió a Internet');
-                this.messageQueue.push(message); // Guardar per enviar més tard
+                this.messageQueue.push(message); 
                 return;
             }
             
-            // Netejar textarea
             this.textarea.value = '';
             this.autoResizeTextarea();
             
@@ -729,61 +697,48 @@ this.localGreetingShown = true;
         }
 
         async sendMessage(message, metadata = {}) {
-  // És el primer missatge de l’usuari?
-  const isInitialMessage = !this.hasUserInteracted;
-  if (isInitialMessage) this.hasUserInteracted = true;
+            const isInitialMessage = !this.hasUserInteracted;
+            if (isInitialMessage) this.hasUserInteracted = true;
 
-  // Mostra a la UI el text tal qual (sense etiqueta)
-  this.addUserMessage(message);
+            this.addUserMessage(message);
 
-  // Neteja navegació i mostra "escrivint..."
-  // Línia comentada intencionadament per canviar el comportament del xat.
-  // Abans: El menú de botons s'esborrava en enviar un missatge de text.
-  // Ara: El menú es manté visible per millorar l'experiència d'usuari i l'accés ràpid a les opcions.
-  // NO DESCOMENTAR si no es vol revertir aquest canvi.
-  // this.navigation.clearNavigation(this.messagesContainer);
-  if (this.config.features.enableTypingIndicator) this.showTypingIndicator();
-  this.setInputEnabled(false);
+            if (this.config.features.enableTypingIndicator) this.showTypingIndicator();
+            this.setInputEnabled(false);
 
-  try {
-    // Prefix d’idioma NOMÉS al primer missatge que s’envia al backend
-    const idiomaTag = IDIOMA_TAGS[this.selectedLanguage] || this.selectedLanguage;
-    const payloadMessage = isInitialMessage ? `[IDIOMA:${idiomaTag}] ${message}` : message;
+            try {
+                const idiomaTag = IDIOMA_TAGS[this.selectedLanguage] || this.selectedLanguage;
+                const payloadMessage = isInitialMessage ? `[IDIOMA:${idiomaTag}] ${message}` : message;
 
-    // Metadata amb idioma i si és primer missatge
-    const enhancedMetadata = {
-      userId: "",
-      preferredLanguage: this.selectedLanguage, // "ca" | "es" | "oc"
-      isInitialMessage: false,
-      ...metadata
-    };
+                const enhancedMetadata = {
+                    userId: "",
+                    preferredLanguage: this.selectedLanguage,
+                    isInitialMessage: false,
+                    ...metadata
+                };
 
-    // Enviament al teu webhook
-    const response = await this.api.sendMessage(
-      this.sessionId,
-      payloadMessage,
-      enhancedMetadata
-    );
+                const response = await this.api.sendMessage(
+                    this.sessionId,
+                    payloadMessage,
+                    enhancedMetadata
+                );
 
-    // Amaga "escrivint..." i pinta la resposta del bot
-    this.hideTypingIndicator();
-    const botResponse = Array.isArray(response) ? response[0].output : response.output;
-    this.addBotMessage(botResponse);
+                this.hideTypingIndicator();
+                const botResponse = Array.isArray(response) ? response[0].output : response.output;
+                this.addBotMessage(botResponse);
 
-    // Desa a l’historial
-    this.storage.saveMessage({ type: 'user', content: message });
-    this.storage.saveMessage({ type: 'bot', content: botResponse });
+                this.storage.saveMessage({ type: 'user', content: message });
+                this.storage.saveMessage({ type: 'bot', content: botResponse });
 
-  } catch (error) {
-    this.hideTypingIndicator();
-    console.error('Error enviant missatge:', error);
-    if (error.message.includes('timeout')) this.showError('La resposta està tardant massa. Torna-ho a intentar.');
-    else this.showError('No s\'ha pogut enviar el missatge. Comprova la connexió.');
-  } finally {
-    this.setInputEnabled(true);
-    this.textarea.focus();
-  }
-}
+            } catch (error) {
+                this.hideTypingIndicator();
+                console.error('Error enviant missatge:', error);
+                if (error.message.includes('timeout')) this.showError('La resposta està tardant massa. Torna-ho a intentar.');
+                else this.showError('No s\'ha pogut enviar el missatge. Comprova la connexió.');
+            } finally {
+                this.setInputEnabled(true);
+                this.textarea.focus();
+            }
+        }
 
         addUserMessage(message) {
             const messageDiv = document.createElement('div');
@@ -793,7 +748,6 @@ this.localGreetingShown = true;
             messageDiv.setAttribute('aria-label', `Tu: ${message}`);
             this.messagesContainer.appendChild(messageDiv);
             
-            // Scroll normal al fons quan l'usuari envia
             this.scrollToBottom();
         }
 
@@ -804,15 +758,12 @@ this.localGreetingShown = true;
             messageDiv.setAttribute('role', 'log');
             messageDiv.setAttribute('aria-label', `Assistent: ${message.replace(/<[^>]*>/g, '')}`);
             
-            // Marcar si és un missatge local (no del servidor)
             if (isLocal) {
                 messageDiv.setAttribute('data-local', 'true');
             }
             
             this.messagesContainer.appendChild(messageDiv);
             
-            // Fem scroll per mostrar l'últim missatge de l'usuari
-            // Només si NO és un missatge local (salutació inicial)
             if (!isLocal) {
                 setTimeout(() => this.scrollToShowUserMessage(), 100);
             } else {
@@ -834,7 +785,6 @@ this.localGreetingShown = true;
             typingDiv.setAttribute('aria-label', 'L\'assistent està escrivint');
             this.messagesContainer.appendChild(typingDiv);
             
-            // Fem scroll per mostrar l'indicador
             setTimeout(() => {
                 typingDiv.scrollIntoView({ 
                     behavior: 'smooth', 
@@ -856,10 +806,8 @@ this.localGreetingShown = true;
             errorDiv.setAttribute('role', 'alert');
             this.messagesContainer.appendChild(errorDiv);
             
-            // Eliminar després de 5 segons
             setTimeout(() => errorDiv.remove(), 5000);
             
-            // Scroll per mostrar error
             this.scrollToBottom();
         }
 
@@ -869,7 +817,6 @@ this.localGreetingShown = true;
             
             const texts = this.getLanguageTexts()[this.selectedLanguage];
             if (!enabled) {
-                // Utilitzar el text d'enviament traduït segons l'idioma
                 this.sendButton.textContent = texts ? texts.sendingBtn : 'Enviant...';
             } else {
                 this.sendButton.textContent = texts ? texts.sendBtn : 'Enviar';
@@ -878,7 +825,7 @@ this.localGreetingShown = true;
 
         autoResizeTextarea() {
             this.textarea.style.height = 'auto';
-            const newHeight = Math.min(this.textarea.scrollHeight, 76); // Max 76px
+            const newHeight = Math.min(this.textarea.scrollHeight, 76);
             this.textarea.style.height = newHeight + 'px';
         }
 
@@ -889,11 +836,9 @@ this.localGreetingShown = true;
         }
 
         scrollToShowUserMessage() {
-            // Funció per fer scroll mostrant l'últim missatge de l'usuari
             const userMessages = this.messagesContainer.querySelectorAll('.chat-message.user');
             if (userMessages.length > 0) {
                 const lastUserMessage = userMessages[userMessages.length - 1];
-                // Fem scroll suau per mostrar l'últim missatge de l'usuari a la part superior
                 lastUserMessage.scrollIntoView({ 
                     behavior: 'smooth', 
                     block: 'start',
@@ -905,7 +850,6 @@ this.localGreetingShown = true;
         handleNavigation(action, ...args) {
             const container = this.messagesContainer;
             
-            // Netejar navegació actual
             this.navigation.clearNavigation(container);
             
             switch (action) {
@@ -956,7 +900,7 @@ this.localGreetingShown = true;
                             categoryKey,
                             null,
                             this.handleNavigation.bind(this),
-                            (message) => this.sendMessage(message) // Enviar directament
+                            (message) => this.sendMessage(message)
                         );
                     }
                     break;
@@ -968,7 +912,7 @@ this.localGreetingShown = true;
                         catKey,
                         subcatKey,
                         this.handleNavigation.bind(this),
-                        (message) => this.sendMessage(message) // Enviar directament
+                        (message) => this.sendMessage(message)
                     );
                     break;
             }
@@ -980,7 +924,6 @@ this.localGreetingShown = true;
             const session = this.storage.getSession();
             if (!session) return;
             
-            // Restaurar sessió si és recent (menys de 24 hores)
             const sessionDate = new Date(session.timestamp);
             const now = new Date();
             const hoursDiff = (now - sessionDate) / (1000 * 60 * 60);
@@ -989,10 +932,8 @@ this.localGreetingShown = true;
                 this.sessionId = session.sessionId;
                 this.selectedLanguage = session.language;
                 
-                // Restaurar historial si existeix
                 const history = this.storage.getHistory();
                 if (history.length > 0) {
-                    // Marcar que l'usuari ja ha interactuat si hi ha historial
                     this.hasUserInteracted = history.some(msg => msg.type === 'user');
                 }
             }
@@ -1001,7 +942,6 @@ this.localGreetingShown = true;
         preventZoomOnMobile() {
             if (window.innerWidth > 480) return;
             
-            // Configurar viewport
             let viewport = document.querySelector('meta[name=viewport]');
             if (viewport) {
                 viewport.setAttribute('content', 
@@ -1014,12 +954,10 @@ this.localGreetingShown = true;
                 document.head.appendChild(newViewport);
             }
             
-            // Prevenir gestos de zoom
             document.addEventListener('gesturestart', (e) => e.preventDefault());
             document.addEventListener('gesturechange', (e) => e.preventDefault());
             document.addEventListener('gestureend', (e) => e.preventDefault());
             
-            // Prevenir doble tap
             let lastTouchEnd = 0;
             document.addEventListener('touchend', (event) => {
                 const now = Date.now();
@@ -1030,51 +968,70 @@ this.localGreetingShown = true;
             }, false);
         }
 
-        // Retornar HTML inicial
+        // Retornar HTML inicial (LAYOUT ACTUALITZAT)
         getInitialHTML() {
-            return `
-                <div class="brand-header">
-                    <img src="${this.config.branding.logo}" alt="${this.config.branding.name}">
-                    <span>${this.config.branding.name}</span>
-                    <button class="close-button" aria-label="Tancar xat">×</button>
+    return `
+        <div class="brand-header">
+            <img src="${this.config.branding.logo}" alt="${this.config.branding.name}">
+            <span>${this.config.branding.name}</span>
+            <button class="close-button" aria-label="Tancar xat">×</button>
+        </div>
+        
+        <div class="new-conversation">
+            
+            <div class="main-center-content">
+                
+                <!-- NOVA ICONA CENTRAL PER OMPLIR ESPAI I DONAR PERSONALITAT -->
+                <div class="welcome-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
                 </div>
-                <div class="new-conversation">
-                    <div class="language-selection">
-                        <h2 class="language-title">Selecciona idioma</h2>
-                        <div class="language-buttons">
-                            <button class="language-btn" data-lang="ca">Català</button>
-                            <button class="language-btn" data-lang="es">Español</button>
-                            <button class="language-btn" data-lang="oc">Aranès</button>
-                        </div>
-                    </div>
-                    <h2 class="welcome-text">${this.config.branding.welcomeText}</h2>
-                    <p class="response-text">${this.config.branding.responseTimeText}</p>
-                </div>
-                <div class="chat-interface">
-                    <div class="brand-header">
-                        <img src="${this.config.branding.logo}" alt="${this.config.branding.name}">
-                        <span>${this.config.branding.name}</span>
-                        <button class="close-button" aria-label="Tancar xat">×</button>
-                    </div>
-                    <div class="chat-messages" role="log" aria-live="polite" aria-label="Missatges del xat"></div>
-                    <div class="chat-input">
-                        <textarea 
-                            placeholder="Escriu el teu missatge aquí..." 
-                            rows="1"
-                            aria-label="Escriu el teu missatge"
-                            maxlength="${this.config.features.maxMessageLength}"
-                        ></textarea>
-                        <button type="submit" aria-label="Enviar missatge">Enviar</button>
-                    </div>
-                    <div class="chat-footer">
-                        <a href="${this.config.branding.poweredBy.link}" target="_blank" rel="noopener">
-                            ${this.config.branding.poweredBy.text}
-                        </a>
-                    </div>
-                </div>
-            `;
-        }
 
+                <div class="welcome-section">
+                    <p class="intro-message">Hola 👋 Sóc l’assistent virtual d’Aran Salut. Pots parlar amb mi del que necessitis o fer-me la consulta que vulguis.</p>
+                </div>
+
+                <div class="language-selection">
+                    <h2 class="language-title">Selecciona idioma</h2>
+                    <div class="language-buttons">
+                        <button class="language-btn" data-lang="ca">Català</button>
+                        <button class="language-btn" data-lang="es">Español</button>
+                        <button class="language-btn" data-lang="oc">Aranès</button>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="privacy-policy-link">
+                 <a href="https://salut.conselharan.org/politica-de-privacidad/" target="_blank">Política de privacitat</a>
+            </div>
+        </div>
+
+        <div class="chat-interface">
+            <div class="brand-header">
+                <img src="${this.config.branding.logo}" alt="${this.config.branding.name}">
+                <span>${this.config.branding.name}</span>
+                <button class="close-button" aria-label="Tancar xat">×</button>
+            </div>
+            <div class="chat-messages" role="log" aria-live="polite" aria-label="Missatges del xat"></div>
+            <div class="chat-input">
+                <textarea 
+                    placeholder="Escriu el teu missatge aquí..." 
+                    rows="1"
+                    aria-label="Escriu el teu missatge"
+                    maxlength="${this.config.features.maxMessageLength}"
+                ></textarea>
+                <button type="submit" aria-label="Enviar missatge">Enviar</button>
+            </div>
+            <div class="chat-footer">
+                <a href="${this.config.branding.poweredBy.link}" target="_blank" rel="noopener">
+                    ${this.config.branding.poweredBy.text}
+                </a>
+            </div>
+        </div>
+    `;
+}
         // Retornar objecte de textos per idioma
         getLanguageTexts() {
             return {
@@ -1540,14 +1497,14 @@ this.localGreetingShown = true;
             };
         }
 
-        // Retornar estils CSS
+        // Retornar estils CSS (MODIFICATS PER POSICIÓ I MIDES)
         getStyles() {
             return `
                 /* ==================== VARIABLES I RESET ==================== */
                 
                 .n8n-chat-widget {
-                    --chat--color-primary: var(--n8n-chat-primary-color, #854fff);
-                    --chat--color-secondary: var(--n8n-chat-secondary-color, #6b3fd4);
+                    --chat--color-primary: var(--n8n-chat-primary-color, #2c7be5);
+                    --chat--color-secondary: var(--n8n-chat-secondary-color, #1a4f9c);
                     --chat--color-background: var(--n8n-chat-background-color, #ffffff);
                     --chat--color-font: var(--n8n-chat-font-color, #333333);
                     --chat--color-error: #dc2626;
@@ -1556,7 +1513,7 @@ this.localGreetingShown = true;
                     --chat--border-radius: 12px;
                     --chat--shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
                     --chat--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-                    --chat--shadow-lg: 0 8px 32px rgba(133, 79, 255, 0.15);
+                    --chat--shadow-lg: 0 8px 32px rgba(44, 123, 229, 0.15);
                     
                     font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                     box-sizing: border-box;
@@ -1581,7 +1538,7 @@ this.localGreetingShown = true;
                     background: var(--chat--color-background);
                     border-radius: var(--chat--border-radius);
                     box-shadow: var(--chat--shadow-lg);
-                    border: 1px solid rgba(133, 79, 255, 0.2);
+                    border: 1px solid rgba(44, 123, 229, 0.2);
                     overflow: hidden;
                     font-family: inherit;
                     transition: all var(--chat--animation-duration) ease;
@@ -1616,21 +1573,26 @@ this.localGreetingShown = true;
                     display: flex;
                     align-items: center;
                     gap: 12px;
-                    border-bottom: 1px solid rgba(133, 79, 255, 0.1);
+                    border-bottom: 1px solid rgba(44, 123, 229, 0.1);
                     position: relative;
-                    background: var(--chat--color-background);
+                    background: #2c7be5; 
+                    background: linear-gradient(135deg, #1a4f9c 0%, #2c7be5 100%);
+                    color: #ffffff;
+                    height: 65px; /* Alçada fixa per calcular la resta */
                 }
                 
                 .n8n-chat-widget .brand-header img {
                     width: 32px;
                     height: 32px;
                     border-radius: 6px;
+                    background: white; 
+                    padding: 2px;
                 }
                 
                 .n8n-chat-widget .brand-header span {
                     font-size: 18px;
                     font-weight: 500;
-                    color: var(--chat--color-font);
+                    color: #ffffff; 
                 }
                 
                 .n8n-chat-widget .close-button {
@@ -1640,7 +1602,7 @@ this.localGreetingShown = true;
                     transform: translateY(-50%);
                     background: none;
                     border: none;
-                    color: var(--chat--color-font);
+                    color: #ffffff; 
                     cursor: pointer;
                     padding: 4px;
                     display: flex;
@@ -1648,17 +1610,17 @@ this.localGreetingShown = true;
                     justify-content: center;
                     transition: all var(--chat--animation-duration);
                     font-size: 20px;
-                    opacity: 0.6;
+                    opacity: 0.9;
                     border-radius: 4px;
                 }
                 
                 .n8n-chat-widget .close-button:hover {
                     opacity: 1;
-                    background: rgba(133, 79, 255, 0.1);
+                    background: rgba(255, 255, 255, 0.2);
                 }
                 
                 .n8n-chat-widget .close-button:focus {
-                    outline: 2px solid var(--chat--color-primary);
+                    outline: 2px solid white;
                     outline-offset: 2px;
                 }
                 
@@ -1673,12 +1635,12 @@ this.localGreetingShown = true;
                     align-items: center;
                     gap: 6px;
                     font-size: 12px;
-                    color: var(--chat--color-font);
-                    opacity: 0.7;
+                    color: rgba(255,255,255, 0.9); 
+                    opacity: 0.9;
                 }
                 
                 .n8n-chat-widget .connection-status.offline {
-                    color: var(--chat--color-error);
+                    color: #ffcccc; 
                     opacity: 1;
                 }
                 
@@ -1686,89 +1648,140 @@ this.localGreetingShown = true;
                     width: 8px;
                     height: 8px;
                     border-radius: 50%;
-                    background: var(--chat--color-success);
+                    background: #4ade80; 
                 }
                 
                 .n8n-chat-widget .connection-status.offline .status-indicator {
-                    background: var(--chat--color-error);
+                    background: #ef4444;
                 }
                 
-                /* ==================== PANTALLA INICIAL ==================== */
+                /* ==================== PANTALLA INICIAL MILLORADA (ESTIL PREMIUM) ==================== */
                 
                 .n8n-chat-widget .new-conversation {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    padding: 20px;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    padding: 24px; /* Una mica més de marge general */
                     text-align: center;
                     width: 100%;
-                    max-width: 300px;
+                    box-sizing: border-box;
+                    background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%); /* Fons subtilment degradat */
+                }
+
+                .n8n-chat-widget .main-center-content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 25px; /* Reduït una mica perquè estigui més agrupat */
+                    padding-bottom: 20px;
+                }
+                
+                /* NOVA ICONA GRAN */
+                .n8n-chat-widget .welcome-icon {
+                    width: 64px;
+                    height: 64px;
+                    background: #eef4ff;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 10px;
+                    color: var(--chat--color-primary);
+                }
+                
+                .n8n-chat-widget .welcome-icon svg {
+                    width: 32px;
+                    height: 32px;
+                }
+
+                .n8n-chat-widget .welcome-section {
+                    padding: 0 10px;
+                    max-width: 90%;
+                }
+
+                .n8n-chat-widget .intro-message {
+                    font-size: 17px;
+                    line-height: 1.6;
+                    color: #1f2937;
+                    margin: 0;
+                    font-weight: 500;
                 }
                 
                 .n8n-chat-widget .language-selection {
-                    margin-bottom: 24px;
+                    width: 100%;
+                    flex-shrink: 0;
+                    margin-top: 10px;
                 }
                 
                 .n8n-chat-widget .language-title {
-                    font-size: 20px;
-                    font-weight: 600;
-                    color: var(--chat--color-font);
-                    margin: 0 0 16px 0;
+                    font-size: 14px;
+                    font-weight: 800;
+                    color: #374151;
+                    margin: 0 0 15px 0;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
                 }
                 
+                /* BOTONS D'IDIOMA (ESTIL CATEGORIA) */
                 .n8n-chat-widget .language-buttons {
                     display: grid;
-                    grid-template-columns: 1fr 1fr 1fr;
-                    gap: 6px;
+                    grid-template-columns: 1fr 1fr 1fr; /* 3 columnes */
+                    gap: 12px;
                     justify-content: center;
+                    width: 100%;
                 }
                 
                 .n8n-chat-widget .language-btn {
-                    padding: 10px 12px;
-                    background: transparent;
-                    border: 2px solid var(--chat--color-primary);
-                    color: var(--chat--color-primary);
-                    border-radius: 8px;
+                    padding: 14px 10px; 
+                    
+                    /* ESTIL BASE (Com "Servicios sociales") */
+                    background: #ffffff;
+                    border: 2px solid rgba(44, 123, 229, 0.25); /* Vora blau suau */
+                    color: var(--chat--color-primary); /* Text blau */
+                    
+                    border-radius: 12px;
                     cursor: pointer;
-                    font-size: 13px;
-                    font-weight: 500;
-                    font-family: inherit;
-                    transition: all var(--chat--animation-duration);
-                }
-                
-                .n8n-chat-widget .language-btn:hover {
-                    background: var(--chat--color-primary);
-                    color: white;
-                    transform: scale(1.02);
-                }
-                
-                .n8n-chat-widget .language-btn.selected {
-                    background: var(--chat--color-primary);
-                    color: white;
-                }
-                
-                .n8n-chat-widget .language-btn:focus {
-                    outline: 2px solid var(--chat--color-primary);
-                    outline-offset: 2px;
-                }
-                
-                .n8n-chat-widget .welcome-text {
-                    font-size: 24px;
+                    font-size: 15px;
                     font-weight: 600;
-                    color: var(--chat--color-font);
-                    margin-bottom: 24px;
-                    line-height: 1.3;
+                    font-family: inherit;
+                    transition: all 0.2s ease;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+                    text-align: center;
                 }
                 
-                .n8n-chat-widget .response-text {
-                    font-size: 14px;
-                    color: var(--chat--color-font);
-                    opacity: 0.7;
-                    margin: 0;
+                /* ESTIL HOVER (Com "Citas médicas") */
+                .n8n-chat-widget .language-btn:hover,
+                .n8n-chat-widget .language-btn.selected {
+                    background: linear-gradient(135deg, var(--chat--color-primary) 0%, var(--chat--color-secondary) 100%);
+                    color: white;
+                    border-color: transparent; /* La vora desapareix en blau sòlid */
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(44, 123, 229, 0.25);
                 }
                 
-                /* ==================== INTERFÍCIE DE XAT ==================== */
+                /* PEU */
+                .n8n-chat-widget .privacy-policy-link {
+                    margin-top: auto;
+                    padding-top: 15px;
+                    border-top: 1px solid rgba(0,0,0,0.05);
+                    flex-shrink: 0;
+                }
+
+                .n8n-chat-widget .privacy-policy-link a {
+                    font-size: 12px;
+                    color: #9ca3af;
+                    text-decoration: none;
+                    transition: color 0.2s;
+                }
+
+                .n8n-chat-widget .privacy-policy-link a:hover {
+                    color: var(--chat--color-primary);
+                    text-decoration: underline;
+                }
+                
+                /* ================== INTERFÍCIE DE XAT ==================== */
                 
                 .n8n-chat-widget .chat-interface {
                     display: none;
@@ -1824,7 +1837,7 @@ this.localGreetingShown = true;
                 
                 .n8n-chat-widget .chat-message.bot {
                     background: var(--chat--color-background);
-                    border: 1px solid rgba(133, 79, 255, 0.2);
+                    border: 1px solid rgba(44, 123, 229, 0.2);
                     color: var(--chat--color-font);
                     align-self: flex-start;
                     box-shadow: var(--chat--shadow-sm);
@@ -1899,7 +1912,7 @@ this.localGreetingShown = true;
                     border-radius: var(--chat--border-radius);
                     max-width: 80%;
                     background: var(--chat--color-background);
-                    border: 1px solid rgba(133, 79, 255, 0.2);
+                    border: 1px solid rgba(44, 123, 229, 0.2);
                     color: var(--chat--color-font);
                     align-self: flex-start;
                     box-shadow: var(--chat--shadow-sm);
@@ -1960,7 +1973,7 @@ this.localGreetingShown = true;
                 .n8n-chat-widget .navigation-container {
                     padding: 20px;
                     background: var(--chat--color-background);
-                    border-bottom: 1px solid rgba(133, 79, 255, 0.1);
+                    border-bottom: 1px solid rgba(44, 123, 229, 0.1);
                     animation: fadeIn var(--chat--animation-duration) ease;
                 }
                 
@@ -1979,8 +1992,8 @@ this.localGreetingShown = true;
                 
                 .n8n-chat-widget .nav-btn {
                     padding: 8px 14px;
-                    background: rgba(133, 79, 255, 0.1);
-                    border: 1px solid rgba(133, 79, 255, 0.3);
+                    background: rgba(44, 123, 229, 0.1);
+                    border: 1px solid rgba(44, 123, 229, 0.3);
                     color: var(--chat--color-primary);
                     border-radius: 8px;
                     cursor: pointer;
@@ -2020,7 +2033,7 @@ this.localGreetingShown = true;
                 .n8n-chat-widget .category-btn {
                     padding: 14px 18px;
                     background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
-                    border: 2px solid rgba(133, 79, 255, 0.2);
+                    border: 2px solid rgba(44, 123, 229, 0.2);
                     color: var(--chat--color-primary);
                     border-radius: var(--chat--border-radius);
                     cursor: pointer;
@@ -2057,7 +2070,7 @@ this.localGreetingShown = true;
                 .n8n-chat-widget .option-btn {
                     padding: 14px 18px;
                     background: rgba(248, 249, 255, 0.8);
-                    border: 1px solid rgba(133, 79, 255, 0.2);
+                    border: 1px solid rgba(44, 123, 229, 0.2);
                     color: var(--chat--color-primary);
                     border-radius: 10px;
                     cursor: pointer;
@@ -2083,7 +2096,7 @@ this.localGreetingShown = true;
                 .n8n-chat-widget .chat-input {
                     padding: 16px;
                     background: var(--chat--color-background);
-                    border-top: 1px solid rgba(133, 79, 255, 0.1);
+                    border-top: 1px solid rgba(44, 123, 229, 0.1);
                     display: flex;
                     gap: 8px;
                 }
@@ -2093,7 +2106,7 @@ this.localGreetingShown = true;
                     padding: 12px;
                     min-height: 38px;
                     max-height: 76px;
-                    border: 1px solid rgba(133, 79, 255, 0.2);
+                    border: 1px solid rgba(44, 123, 229, 0.2);
                     border-radius: 8px;
                     background: var(--chat--color-background);
                     color: var(--chat--color-font);
@@ -2147,20 +2160,20 @@ this.localGreetingShown = true;
                     cursor: not-allowed;
                 }
                 
-                /* ==================== BOTÓ TOGGLE ==================== */
+                /* ==================== BOTÓ TOGGLE (MIDA GRAN) ==================== */
                 
                 .n8n-chat-widget .chat-toggle {
                     position: fixed;
-                    bottom: 40px;
-                    right: 40px;
-                    width: 80px;
-                    height: 80px;
-                    border-radius: 100px;
+                    bottom: 40px; /* Més marge a baix */
+                    right: 40px;  /* Més marge a la dreta */
+                    width: 80px;  /* Mida augmentada a 80px */
+                    height: 80px; /* Mida augmentada a 80px */
+                    border-radius: 40px; 
                     background: linear-gradient(135deg, var(--chat--color-primary) 0%, var(--chat--color-secondary) 100%);
                     color: white;
                     border: none;
                     cursor: pointer;
-                    box-shadow: 0 4px 12px rgba(133, 79, 255, 0.3);
+                    box-shadow: 0 4px 12px rgba(44, 123, 229, 0.3);
                     z-index: 9998;
                     transition: all var(--chat--animation-duration);
                     display: flex;
@@ -2175,7 +2188,7 @@ this.localGreetingShown = true;
                 
                 .n8n-chat-widget .chat-toggle:hover {
                     transform: scale(1.05);
-                    box-shadow: 0 6px 20px rgba(133, 79, 255, 0.4);
+                    box-shadow: 0 6px 20px rgba(44, 123, 229, 0.4);
                 }
                 
                 .n8n-chat-widget .chat-toggle:focus {
@@ -2184,8 +2197,8 @@ this.localGreetingShown = true;
                 }
                 
                 .n8n-chat-widget .chat-toggle svg {
-                    width: 34px;
-                    height: 34px;
+                    width: 35px;  /* Icona augmentada proporcionalment */
+                    height: 35px;
                     fill: currentColor;
                 }
                 
@@ -2195,7 +2208,7 @@ this.localGreetingShown = true;
                     padding: 8px;
                     text-align: center;
                     background: var(--chat--color-background);
-                    border-top: 1px solid rgba(133, 79, 255, 0.1);
+                    border-top: 1px solid rgba(44, 123, 229, 0.1);
                 }
                 
                 .n8n-chat-widget .chat-footer a {
@@ -2272,15 +2285,15 @@ this.localGreetingShown = true;
                     }
                     
                     .n8n-chat-widget .chat-toggle {
-                        bottom: max(25px, env(safe-area-inset-bottom));
-                        right: 25px;
-                        width: 60px;
+                        bottom: max(15px, env(safe-area-inset-bottom));
+                        right: 15px;
+                        width: 60px; /* Al mòbil mantenim 60px per no tapar massa */
                         height: 60px;
                     }
                     
                     .n8n-chat-widget .chat-toggle.position-left {
                         right: auto;
-                        left: 25px;
+                        left: 15px;
                     }
                     
                     /* Millores tàctils */
@@ -2374,16 +2387,16 @@ this.localGreetingShown = true;
                 }
                 
                 .n8n-chat-widget .chat-messages::-webkit-scrollbar-track {
-                    background: rgba(133, 79, 255, 0.05);
+                    background: rgba(44, 123, 229, 0.05);
                 }
                 
                 .n8n-chat-widget .chat-messages::-webkit-scrollbar-thumb {
-                    background: rgba(133, 79, 255, 0.2);
+                    background: rgba(44, 123, 229, 0.2);
                     border-radius: 3px;
                 }
                 
                 .n8n-chat-widget .chat-messages::-webkit-scrollbar-thumb:hover {
-                    background: rgba(133, 79, 255, 0.3);
+                    background: rgba(44, 123, 229, 0.3);
                 }
             `;
         }
