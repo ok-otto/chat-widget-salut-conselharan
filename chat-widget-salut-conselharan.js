@@ -1343,34 +1343,34 @@
                 },
                 oc: {
                     btnText: "Mandatz-mos un messatge",
-                    placeholder: "Escrivètz eth vòstre messatge ací...",
+                    placeholder: "Escrivètz eth vòste messatge ací...",
                     sendBtn: "Mandar",
                     sendingBtn: "Mandant...",
-                    greeting: "**Adiu! Sòi er assistent virtuau d'ARAN RESPON.** Com pòdi ajudar-te?",
-                    poweredBy: "Desvolupat per ok-otto",
+                    greeting: "**Adiu! Sò er assistent virtuau d'ARAN RESPON.** Quin te pòdi ajudar?",
+                    poweredBy: "Desvolopat per ok-otto",
                     navigation: {
                         back: "← Tornar",
                         home: "🏠 Inici",
-                        breadcrumb: "Ès en:"
+                        breadcrumb: "Ètz en:"
                     },
                     categories: {
                         "citas": {
-                            title: "Rendètz-vos medics",
+                            title: "Rendètz-vos medicaus",
                             subcategories: {
                                 "pedir": {
-                                    title: "Demandar rendètz-vos",
+                                    title: "Demanar rendètz-vos",
                                     options: {
                                         "medicina-general": { 
                                             title: "Medecina generau", 
-                                            message: "Vòli demandar un rendètz-vos de medecina generau" 
+                                            message: "Vòli demanar un rendètz-vos de medecina generau" 
                                         },
                                         "pediatria": { 
                                             title: "Pediatria", 
-                                            message: "Vòli demandar un rendètz-vos de pediatria" 
+                                            message: "Vòli demanar un rendètz-vos de pediatria" 
                                         },
                                         "especialistas": { 
                                             title: "Especialistes", 
-                                            message: "Vòli demandar un rendètz-vos damb un especialista" 
+                                            message: "Vòli demanar un rendètz-vos damb un especialista" 
                                         }
                                     }
                                 },
@@ -1383,11 +1383,11 @@
                                         },
                                         "cambiar-especialidad": { 
                                             title: "Cambiar especialitat", 
-                                            message: "Vòli cambiar era especialitat deth meu rendètz-vos" 
+                                            message: "Vòli cambiar era especialitat deth mèn rendètz-vos" 
                                         },
                                         "cancelar": { 
                                             title: "Anullar rendètz-vos", 
-                                            message: "Vòli anullar un rendètz-vos medic" 
+                                            message: "Vòli anullar un rendètz-vos medicau" 
                                         }
                                     }
                                 },
@@ -1395,30 +1395,30 @@
                                     title: "Consultar rendètz-vos",
                                     options: {
                                         "cuando": { 
-                                            title: "Quan ei eth meu següent rendètz-vos?", 
-                                            message: "Vòli saber quan ei eth meu següent rendètz-vos medic" 
+                                            title: "Quan ei eth mèn següent rendètz-vos?", 
+                                            message: "Vòli saber quan ei eth mèn següent rendètz-vos medicau" 
                                         },
                                         "donde": { 
-                                            title: "On serà?", 
-                                            message: "Vòli saber on serà eth meu rendètz-vos medic" 
+                                            title: "A on serà?", 
+                                            message: "Vòli saber a on serà eth mèn rendètz-vos medicau" 
                                         }
                                     }
                                 }
                             }
                         },
                         "servicios": {
-                            title: "Servicis socials",
+                            title: "Servicis sociaus",
                             subcategories: {
                                 "mayores": {
-                                    title: "Ajuda a persones majors",
+                                    title: "Ajuda ara gent grana",
                                     options: {
                                         "valoracion": { 
-                                            title: "Sol·licitud de valoracion", 
-                                            message: "Necessiti ua valoracion entà servicis socials entà persona major" 
+                                            title: "Sollicitud de valoracion", 
+                                            message: "È de besonh ua valoracion entà servicis sociaus entara gent grana" 
                                         },
                                         "domiciliarios": { 
-                                            title: "Cures domiciliaris", 
-                                            message: "Necessiti informacion sus cures domiciliaris" 
+                                            title: "Suenhs domiciliaris", 
+                                            message: "È de besonh informacion sus suenhs domiciliaris" 
                                         }
                                     }
                                 },
@@ -1426,12 +1426,12 @@
                                     title: "Salut mentau e supòrt psicologic",
                                     options: {
                                         "visita": { 
-                                            title: "Demandar visita", 
-                                            message: "Vòli demandar ua visita de salut mentau" 
+                                            title: "Demanar visita", 
+                                            message: "Vòli demanar ua visita de salut mentau" 
                                         },
                                         "urgencia": { 
                                             title: "Urgéncia emocionau", 
-                                            message: "Ai ua urgéncia emocionau e necessiti ajuda" 
+                                            message: "È ua urgéncia emocionau e è de besonh ajuda" 
                                         }
                                     }
                                 },
@@ -1440,11 +1440,11 @@
                                     options: {
                                         "dependencia": { 
                                             title: "Informacion sus dependéncia", 
-                                            message: "Necessiti informacion sus era Lei de Dependéncia" 
+                                            message: "È de besonh informacion sus era Lei de Dependéncia" 
                                         },
                                         "acompanamiento": { 
-                                            title: "Sol·licitud d'acompanhament", 
-                                            message: "Necessiti servicis d'acompanhament sociau" 
+                                            title: "Sollicitud d'acompanhament", 
+                                            message: "È de besonh servicis d'acompanhament sociau" 
                                         }
                                     }
                                 }
@@ -1454,20 +1454,20 @@
                             title: "Informacion generau",
                             options: {
                                 "ubicacion": { 
-                                    title: "On sòm?", 
-                                    message: "Vòli saber on se tròben es centres d'Aran Salut" 
+                                    title: "A on èm?", 
+                                    message: "Vòli saber a on se tròben es centres d'Aran Salut" 
                                 },
                                 "horarios": { 
-                                    title: "Oraris dera espitau", 
-                                    message: "Vòli consultar es oraris dera espitau" 
+                                    title: "Oraris der espitau", 
+                                    message: "Vòli consultar es oraris der espitau" 
                                 },
                                 "contacto": { 
-                                    title: "Telefòns e contacte", 
-                                    message: "Necessiti es telefòns e dades de contacte" 
+                                    title: "Telefons e contacte", 
+                                    message: "È de besonh es telefons e donades de contacte" 
                                 },
                                 "documentacion": { 
-                                    title: "Documentacion necessària entà tramits", 
-                                    message: "Quina documentacion necessiti entà hèr tramits?" 
+                                    title: "Documentacion de besonh entà tramits", 
+                                    message: "Quina documentacion è de besonh entà hèr tramits?" 
                                 }
                             }
                         },
@@ -1475,8 +1475,8 @@
                             title: "Autes consultes",
                             options: {
                                 "duda-medica": { 
-                                    title: "Ai un dobte medic", 
-                                    message: "Ai un dobte medic e necessiti orientacion" 
+                                    title: "È un dobte medicau", 
+                                    message: "È un dobte medicau e è de besonh orientacion" 
                                 },
                                 "emergencias": { 
                                     title: "Emergéncies", 
@@ -1484,18 +1484,16 @@
                                 },
                                 "recetas": { 
                                     title: "Recèptes e farmàcia", 
-                                    message: "Ai ua consulta sus recèptes o farmàcia" 
+                                    message: "È ua consulta sus recèptes o farmàcia" 
                                 },
                                 "ayuda-app": { 
                                     title: "Ajuda damb era app o eth chat", 
-                                    message: "Necessiti ajuda damb era aplicacion o aqueth chat" 
+                                    message: "È de besonh ajuda damb era aplicacion o aguest chat" 
                                 }
                             }
                         }
                     }
                 }
-            };
-        }
 
         // Retornar estils CSS (MODIFICATS PER POSICIÓ I MIDES)
         getStyles() {
