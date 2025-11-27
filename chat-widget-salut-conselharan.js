@@ -1494,7 +1494,8 @@
                         }
                     }
                 }
-
+            };
+        }
         // Retornar estils CSS (MODIFICATS PER POSICIÓ I MIDES)
         getStyles() {
             return `
