@@ -997,7 +997,7 @@
                     <div class="language-buttons">
                         <button class="language-btn" data-lang="ca">Català</button>
                         <button class="language-btn" data-lang="es">Español</button>
-                        <button class="language-btn" data-lang="oc">Aranès</button>
+                        <!-- <button class="language-btn" data-lang="oc">Aranès</button> -->
                     </div>
                 </div>
 
