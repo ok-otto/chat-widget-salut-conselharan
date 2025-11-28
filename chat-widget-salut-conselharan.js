@@ -994,7 +994,7 @@
 
                 <div class="language-selection">
                     <h2 class="language-title">Selecciona idioma</h2>
-                    <div class="language-buttons">
+                    <div class="language-buttons" style="grid-template-columns: 1fr 1fr;">
                         <button class="language-btn" data-lang="ca">Català</button>
                         <button class="language-btn" data-lang="es">Español</button>
                         <!-- <button class="language-btn" data-lang="oc">Aranès</button> -->
