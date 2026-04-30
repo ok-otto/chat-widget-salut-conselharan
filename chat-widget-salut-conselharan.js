@@ -1004,7 +1004,7 @@
 			</div>
 			
 			<div class="next-generation-image">
-				 <img src="https://salut.conselharan.org/wp-content/themes/divi-child/chatbotaran/next-generation-aransalut-chatbot.png" alt="${this.config.branding.name}">
+				 <img src="https://salut.conselharan.org/wp-content/themes/divi-child/chatbotaran/next-generation-aransalut-chatbot.jpg" alt="${this.config.branding.name}">
 			</div>
 			
 			<div class="privacy-policy-link">
