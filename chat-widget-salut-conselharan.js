@@ -1767,8 +1767,8 @@
 				
 				/* PEU */
 				.n8n-chat-widget .privacy-policy-link {
-					margin-top: auto;
-					padding-top: 15px;
+					margin-top: 5px;
+					padding-top: 5px;
 					border-top: 1px solid rgba(0,0,0,0.05);
 					flex-shrink: 0;
 				}
@@ -1786,7 +1786,8 @@
 				}
 				
 				.n8n-chat-widget .next-generation-image {
-					max-width: 90%;
+					max-width: 100%;
+					margin: 0px auto;
 				}
 				
 				.n8n-chat-widget .next-generation-image img{
