@@ -2221,6 +2221,9 @@
 					text-align: center;
 					background: var(--chat--color-background);
 					border-top: 1px solid rgba(44, 123, 229, 0.1);
+					color: var(--chat--color-primary);
+					font-size: 12px;
+					opacity: 0.8;
 				}
 				
 				.n8n-chat-widget .chat-footer a {
