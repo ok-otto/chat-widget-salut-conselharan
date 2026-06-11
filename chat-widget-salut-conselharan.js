@@ -1029,10 +1029,7 @@
 				<button type="submit" aria-label="Enviar missatge">Enviar</button>
 			</div>
 			<div class="chat-footer">
-				<a href="${this.config.branding.poweredBy.link}" target="_blank" rel="noopener">
 					${this.config.branding.poweredBy.text}
-				</a>
-				
 			</div>
 		</div>
 	`;
